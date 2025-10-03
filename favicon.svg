@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Dark background with rounded corners -->
+  <rect width="64" height="64" rx="12" fill="#050507"/>
+  <!-- Green glow accent -->
+  <rect width="64" height="64" rx="12" fill="url(#glow)" opacity="0.15"/>
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00e5a0"/>
+      <stop offset="100%" stop-color="#050507" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Border -->
+  <rect x="1" y="1" width="62" height="62" rx="11" fill="none" stroke="#00e5a0" stroke-width="1.5" opacity="0.5"/>
+  <!-- [P] text -->
+  <text x="9" y="45" font-family="monospace" font-size="36" font-weight="700" fill="#00e5a0">[P]</text>
+</svg>

@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[Ptt]Stack — Firma de Email</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #050507;
+      --surface:  #0d0d12;
+      --border:   #1a1a24;
+      --accent:   #00e5a0;
+      --accent2:  #00b37e;
+      --text:     #e8e8f0;
+      --muted:    #6b6b80;
+      --mono:     'JetBrains Mono', monospace;
+      --sans:     'Inter', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 32px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(5,5,7,.92);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+    .nav-brand {
+      font-family: var(--mono);
+      font-size: 14px;
+      color: var(--accent);
+      letter-spacing: 1px;
+    }
+    .nav-brand span { color: var(--muted); }
+    .nav-actions { display: flex; gap: 10px; }
+    .nav-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all .2s;
+      text-decoration: none;
+    }
+    .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 56px 32px 32px;
+      text-align: center;
+    }
+    .hero-tag {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      border: 1px solid var(--accent2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      letter-spacing: 1px;
+    }
+    .hero h1 {
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .hero h1 em { color: var(--accent); font-style: normal; }
+    .hero p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ── STEPS BAR ── */
+    .steps-bar {
+      max-width: 720px;
+      margin: 40px auto 0;
+      padding: 0 32px;
+      display: flex;
+      gap: 0;
+    }
+    .step-item {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .step-item + .step-item::before {
+      content: '';
+      display: block;
+      width: 32px;
+      flex-shrink: 0;
+      height: 1px;
+      background: var(--border);
+      margin-top: 18px;
+    }
+    .step-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-text { padding-top: 6px; }
+    .step-text strong { display: block; font-size: 13px; font-weight: 600; color: var(--text); }
+    .step-text span { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+    /* ── MAIN CONTENT ── */
+    .main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 32px 0;
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .section-title em { color: var(--accent); font-style: normal; }
+    .section-desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    /* ── SIGNATURE CARD ── */
+    .sig-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+
+    /* email chrome header */
+    .email-chrome {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,.02);
+    }
+    .email-chrome-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+    .email-chrome-dot:nth-child(1) { background: #ff5f57; }
+    .email-chrome-dot:nth-child(2) { background: #ffbd2e; }
+    .email-chrome-dot:nth-child(3) { background: #28ca41; }
+    .email-chrome-label {
+      margin-left: 8px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    /* email body (white bg) */
+    .email-body {
+      background: #ffffff;
+      padding: 24px 28px;
+    }
+    .email-placeholder {
+      color: #cccccc;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      line-height: 1.7;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #eeeeee;
+      padding-bottom: 20px;
+    }
+
+    /* ── THE SIGNATURE ITSELF ── */
+    /* These styles only affect the page preview (not the copied HTML — that uses inline styles) */
+    #sig-preview-full,
+    #sig-preview-compact {
+      display: inline-block;
+    }
+
+    /* ── COPY ROW ── */
+    .copy-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-top: 1px solid var(--border);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .copy-hint {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .copy-hint code {
+      color: var(--accent);
+      background: rgba(0,229,160,.08);
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    .btn-copy {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: #050507;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 10px 20px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: all .2s;
+      letter-spacing: .5px;
+      white-space: nowrap;
+    }
+    .btn-copy:hover { background: var(--accent2); transform: translateY(-1px); }
+    .btn-copy:active { transform: translateY(0); }
+    .btn-copy.copied {
+      background: #1a2e2a;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      background: #111118;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 13px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all .3s;
+      pointer-events: none;
+      max-width: 320px;
+    }
+    #toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ── TIP BOX ── */
+    .tip-box {
+      background: rgba(0,229,160,.05);
+      border: 1px solid rgba(0,229,160,.2);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .tip-box strong { color: var(--accent); }
+
+    /* ── DIVIDER ── */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 48px 0 40px; }
+
+    @media (max-width: 580px) {
+      nav { padding: 14px 20px; }
+      .hero, .main { padding-left: 20px; padding-right: 20px; }
+      .steps-bar { padding: 0 20px; flex-direction: column; gap: 16px; }
+      .step-item + .step-item::before { display: none; }
+      .copy-row { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media print {
+      body { background: #fff; color: #000; }
+      nav, .steps-bar, .copy-row, .tip-box, .btn-copy { display: none !important; }
+      .email-body { padding: 12px; }
+      .sig-card { border: 1px solid #ccc; border-radius: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-brand">[Ptt]<span>Stack</span> <span style="color:var(--border)">·</span> <span>firma.html</span></div>
+  <div class="nav-actions">
+    <a href="index.html" class="nav-btn">← portfolio</a>
+    <button class="nav-btn" onclick="window.print()">🖨 imprimir</button>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-tag">// email_signature · pttstack.dev</div>
+  <h1>Tu firma de <em>email profesional</em></h1>
+  <p>Copia la firma y pégala en Gmail en 3 pasos. Compatible con todos los clientes de correo modernos.</p>
+</div>
+
+<!-- ── STEPS BAR ── -->
+<div class="steps-bar">
+  <div class="step-item">
+    <div class="step-num">01</div>
+    <div class="step-text">
+      <strong>Copia la firma</strong>
+      <span>Haz clic en<br>"Copiar firma"</span>
+    </div>
+  </div>
+  <div class="step-item">
+    <div class="step-num">02</div>
+    <div class="step-text">
+      <strong>Abre Gmail</strong>
+      <span>⚙ Ajustes →<br>Ver todos los ajustes</span>
+    </div>
+  </div>
+  <div class="step-item">
+    <div class="step-num">03</div>
+    <div class="step-text">
+      <strong>Pega en Firma</strong>
+      <span>Pestaña General →<br>Firma → <kbd>Ctrl+V</kbd></span>
+    </div>
+  </div>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+  <!-- ═══════════════════════════════════ -->
+  <!--  FIRMA COMPLETA                    -->
+  <!-- ═══════════════════════════════════ -->
+  <div class="section-label">// firma_completa · para emails nuevos</div>
+  <div class="section-title">Firma <em>Completa</em></div>
+  <p class="section-desc">Úsala al escribir un email nuevo o al ponerte en contacto con un cliente por primera vez.</p>
+
+  <div class="sig-card">
+    <div class="email-chrome">
+      <div class="email-chrome-dot"></div>
+      <div class="email-chrome-dot"></div>
+      <div class="email-chrome-dot"></div>
+      <div class="email-chrome-label">preview — nuevo mensaje</div>
+    </div>
+    <div class="email-body">
+      <div class="email-placeholder">
+        Hola [nombre],<br><br>
+        Me pongo en contacto para comentarte la propuesta del proyecto…<br><br>
+        Quedo a tu disposición para cualquier consulta.<br><br>
+        Un saludo,
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════
+           SIGNATURE COMPLETE — tabla con inline styles
+           ═══════════════════════════════════════════════════ -->
+      <div id="sig-preview-full">
+        <table cellpadding="0" cellspacing="0" border="0" style="max-width:520px;border-collapse:collapse;">
+          <tr>
+            <!-- Left brand block -->
+            <td style="background:#050507;padding:18px 16px;vertical-align:middle;border-radius:6px 0 0 0;min-width:90px;text-align:center;">
+              <div style="font-family:'Courier New',Courier,monospace;font-size:13px;font-weight:700;color:#00e5a0;letter-spacing:1px;line-height:1.3;">[Ptt]<br>Stack</div>
+              <div style="font-family:'Courier New',Courier,monospace;font-size:9px;color:#00b37e;letter-spacing:2px;margin-top:5px;">.dev</div>
+            </td>
+            <!-- Accent border -->
+            <td style="width:3px;background:#00e5a0;"></td>
+            <!-- Right info -->
+            <td style="padding:16px 20px;vertical-align:top;background:#ffffff;">
+              <div style="font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:700;color:#111111;margin-bottom:2px;letter-spacing:-0.3px;">Patricio García</div>
+              <div style="font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#888888;margin-bottom:12px;letter-spacing:0.3px;">Fullstack Developer</div>
+              <table cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="padding:3px 0;">
+                    <table cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td style="font-size:13px;width:18px;">✉</td>
+                        <td style="font-family:Arial,Helvetica,sans-serif;font-size:12px;padding-left:5px;"><a href="mailto:patricio@pttstack.dev" style="color:#333333;text-decoration:none;">patricio@pttstack.dev</a></td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:3px 0;">
+                    <table cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td style="font-size:13px;width:18px;">📱</td>
+                        <td style="font-family:Arial,Helvetica,sans-serif;font-size:12px;padding-left:5px;"><a href="tel:+34665605902" style="color:#333333;text-decoration:none;">+34 665 605 902</a></td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:3px 0;">
+                    <table cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td style="font-size:13px;width:18px;">🌐</td>
+                        <td style="font-family:Arial,Helvetica,sans-serif;font-size:12px;padding-left:5px;"><a href="https://pttstack.dev" style="color:#00b37e;text-decoration:none;font-weight:600;">pttstack.dev</a></td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:3px 0;">
+                    <table cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td style="font-family:Arial,Helvetica,sans-serif;font-size:11px;font-weight:700;color:#0077b5;background:#0077b5;color:#ffffff;padding:1px 4px;border-radius:2px;width:18px;text-align:center;">in</td>
+                        <td style="font-family:Arial,Helvetica,sans-serif;font-size:12px;padding-left:5px;"><a href="https://www.linkedin.com/in/patricio-garc%C3%ADa-mench%C3%B3n-756808171/" style="color:#0077b5;text-decoration:none;">LinkedIn</a></td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- Stack row -->
+          <tr>
+            <td colspan="3" style="background:#f7f7f8;padding:8px 20px;border-top:2px solid #00e5a0;border-radius:0 0 6px 6px;">
+              <span style="font-family:Arial,Helvetica,sans-serif;font-size:10px;color:#aaaaaa;letter-spacing:0.8px;">React &nbsp;·&nbsp; Node.js &nbsp;·&nbsp; TypeScript &nbsp;·&nbsp; React Native &nbsp;·&nbsp; AWS &nbsp;·&nbsp; Docker</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <!-- ═══════════════════════════════════════════════════ -->
+
+    </div><!-- /email-body -->
+
+    <div class="copy-row">
+      <div class="copy-hint">
+        Copia → pega en <code>Gmail › Ajustes › Firma</code>
+      </div>
+      <button class="btn-copy" id="btn-full" onclick="copySignature('sig-preview-full', 'btn-full', 'Firma completa copiada ✓  Ahora pégala en Gmail')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copiar firma completa
+      </button>
+    </div>
+  </div><!-- /sig-card -->
+
+  <div class="tip-box">
+    <strong>💡 Tip Gmail:</strong> Al pegar en el editor de firma de Gmail, selecciona primero todo el contenido existente (<kbd>Ctrl+A</kbd>) y luego pega (<kbd>Ctrl+V</kbd>) para sustituir por completo la firma anterior.
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════════ -->
+  <!--  FIRMA COMPACTA                    -->
+  <!-- ═══════════════════════════════════ -->
+  <div class="section-label">// firma_compacta · para respuestas y reenvíos</div>
+  <div class="section-title">Firma <em>Compacta</em></div>
+  <p class="section-desc">Úsala al responder a conversaciones ya iniciadas. Menos intrusiva, igual de profesional.</p>
+
+  <div class="sig-card">
+    <div class="email-chrome">
+      <div class="email-chrome-dot"></div>
+      <div class="email-chrome-dot"></div>
+      <div class="email-chrome-dot"></div>
+      <div class="email-chrome-label">preview — responder / reenviar</div>
+    </div>
+    <div class="email-body">
+      <div class="email-placeholder">
+        Gracias por tu respuesta. Te confirmo que empezamos la semana que viene.<br><br>
+        Saludos,
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════
+           SIGNATURE COMPACT — inline styles
+           ═══════════════════════════════════════════════════ -->
+      <div id="sig-preview-compact">
+        <table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-top:2px solid #00e5a0;padding-top:10px;">
+          <tr>
+            <td style="padding-top:10px;">
+              <span style="font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;color:#111111;">Patricio García</span>
+              <span style="font-family:'Courier New',Courier,monospace;font-size:11px;color:#00b37e;font-weight:700;margin-left:8px;padding:2px 6px;background:#f0faf6;border-radius:3px;">[Ptt]Stack</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding-top:4px;">
+              <span style="font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#888888;">Fullstack Developer</span>
+              <span style="color:#dddddd;margin:0 6px;">·</span>
+              <a href="mailto:patricio@pttstack.dev" style="font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#555555;text-decoration:none;">patricio@pttstack.dev</a>
+              <span style="color:#dddddd;margin:0 6px;">·</span>
+              <a href="tel:+34665605902" style="font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#555555;text-decoration:none;">+34 665 605 902</a>
+              <span style="color:#dddddd;margin:0 6px;">·</span>
+              <a href="https://pttstack.dev" style="font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#00b37e;text-decoration:none;font-weight:600;">pttstack.dev</a>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <!-- ═══════════════════════════════════════════════════ -->
+
+    </div><!-- /email-body -->
+
+    <div class="copy-row">
+      <div class="copy-hint">
+        Ideal para <code>responder</code> sin ocupar demasiado espacio
+      </div>
+      <button class="btn-copy" id="btn-compact" onclick="copySignature('sig-preview-compact', 'btn-compact', 'Firma compacta copiada ✓  Ahora pégala en Gmail')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copiar firma compacta
+      </button>
+    </div>
+  </div><!-- /sig-card -->
+
+  <div class="tip-box">
+    <strong>💡 Consejo pro:</strong> En Gmail puedes configurar <strong>dos firmas distintas</strong>: una para mensajes nuevos (completa) y otra para respuestas (compacta). Ve a <strong>Ajustes → General → Firma</strong> y crea ambas desde aquí.
+  </div>
+
+</div><!-- /main -->
+
+<!-- ── TOAST ── -->
+<div id="toast"></div>
+
+<script>
+  /* ── COPY ── */
+  async function copySignature(sigId, btnId, msg) {
+    const sig = document.getElementById(sigId);
+    const btn = document.getElementById(btnId);
+
+    try {
+      // Try modern Clipboard API first (Chrome 76+)
+      const blob = new Blob([sig.outerHTML], { type: 'text/html' });
+      const textBlob = new Blob([sig.innerText || sig.textContent], { type: 'text/plain' });
+      const item = new ClipboardItem({ 'text/html': blob, 'text/plain': textBlob });
+      await navigator.clipboard.write([item]);
+    } catch (e) {
+      // Fallback: select and execCommand
+      const range = document.createRange();
+      range.selectNodeContents(sig);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      document.execCommand('copy');
+      sel.removeAllRanges();
+    }
+
+    // Button feedback
+    const original = btn.innerHTML;
+    btn.classList.add('copied');
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> ¡Copiada!';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = original;
+    }, 2500);
+
+    showToast(msg);
+  }
+
+  /* ── TOAST ── */
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[Ptt]Stack · Guía de Reunión con Cliente</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:         #050507;
+      --bg-1:       #0e0e12;
+      --bg-2:       #161620;
+      --surface:    #1a1a24;
+      --border:     #2a2a38;
+      --accent:     #00e5a0;
+      --accent-dim: rgba(0,229,160,0.1);
+      --purple:     #8b5cf6;
+      --purple-dim: rgba(139,92,246,0.1);
+      --amber:      #fbbf24;
+      --amber-dim:  rgba(251,191,36,0.1);
+      --blue:       #00b8ff;
+      --blue-dim:   rgba(0,184,255,0.1);
+      --red:        #f87171;
+      --red-dim:    rgba(248,113,113,0.1);
+      --text:       #f0f0f8;
+      --muted:      #7a7a9a;
+      --dim:        #4a4a6a;
+      --mono:       'JetBrains Mono', monospace;
+      --sans:       'Inter', sans-serif;
+      --r:          12px;
+      --r-lg:       20px;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(5,5,7,0.93); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 2rem;
+      display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+    }
+    .logo { font-family: var(--mono); font-size: 1rem; font-weight: 700; }
+    .logo span { color: var(--accent); }
+    .nav-right { display: flex; gap: 0.6rem; }
+    .nav-btn {
+      font-size: 0.78rem; color: var(--muted);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.35rem 0.85rem;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.2s; font-family: var(--mono);
+    }
+    .nav-btn:hover { color: var(--text); border-color: var(--dim); }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 4rem 2rem 3rem;
+      background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(0,229,160,0.06), transparent 70%);
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-label {
+      font-family: var(--mono); font-size: 0.72rem; color: var(--accent);
+      letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 900; letter-spacing: -0.04em; margin-bottom: 0.75rem;
+    }
+    .hero h1 em { font-style: normal; color: var(--accent); }
+    .hero p { color: var(--muted); max-width: 540px; margin: 0 auto; }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+    main { padding: 3rem 0 6rem; display: flex; flex-direction: column; gap: 2rem; }
+
+    /* ── SECTION BLOCK ── */
+    .block {
+      background: var(--bg-1); border: 1px solid var(--border);
+      border-radius: var(--r-lg); overflow: hidden;
+    }
+    .block-header {
+      padding: 1.25rem 1.75rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .block-icon {
+      width: 42px; height: 42px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem; flex-shrink: 0;
+    }
+    .icon-green  { background: var(--accent-dim); border: 1px solid rgba(0,229,160,0.25); }
+    .icon-purple { background: var(--purple-dim); border: 1px solid rgba(139,92,246,0.25); }
+    .icon-amber  { background: var(--amber-dim);  border: 1px solid rgba(251,191,36,0.25); }
+    .icon-blue   { background: var(--blue-dim);   border: 1px solid rgba(0,184,255,0.25); }
+    .icon-red    { background: var(--red-dim);    border: 1px solid rgba(248,113,113,0.25); }
+
+    .block-title { flex: 1; }
+    .block-title h2 { font-size: 1rem; font-weight: 700; margin-bottom: 0.1rem; }
+    .block-title p  { font-size: 0.78rem; color: var(--muted); }
+    .block-badge {
+      font-family: var(--mono); font-size: 0.62rem;
+      padding: 3px 10px; border-radius: 999px;
+      border: 1px solid; flex-shrink: 0;
+    }
+    .badge-green  { color: var(--accent); background: var(--accent-dim); border-color: rgba(0,229,160,0.3); }
+    .badge-purple { color: var(--purple); background: var(--purple-dim); border-color: rgba(139,92,246,0.3); }
+    .badge-amber  { color: var(--amber);  background: var(--amber-dim);  border-color: rgba(251,191,36,0.3); }
+    .badge-blue   { color: var(--blue);   background: var(--blue-dim);   border-color: rgba(0,184,255,0.3); }
+    .badge-red    { color: var(--red);    background: var(--red-dim);    border-color: rgba(248,113,113,0.3); }
+
+    .block-body { padding: 1.5rem 1.75rem; }
+
+    /* ── QUESTION GROUPS ── */
+    .q-group { margin-bottom: 1.5rem; }
+    .q-group:last-child { margin-bottom: 0; }
+    .q-group-label {
+      font-family: var(--mono); font-size: 0.68rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+    .q-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .q-item {
+      display: flex; align-items: flex-start; gap: 0.85rem;
+      padding: 0.75rem 1rem;
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: var(--r); cursor: pointer;
+      transition: all 0.2s; user-select: none;
+    }
+    .q-item:hover { border-color: rgba(0,229,160,0.25); background: var(--surface); }
+    .q-item.checked { border-color: rgba(0,229,160,0.3); background: var(--accent-dim); }
+    .q-check {
+      width: 18px; height: 18px; border-radius: 5px;
+      border: 2px solid var(--border); flex-shrink: 0; margin-top: 2px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem; color: transparent; transition: all 0.2s;
+    }
+    .q-item.checked .q-check { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+    .q-text { font-size: 0.875rem; flex: 1; line-height: 1.5; }
+    .q-item.checked .q-text { color: var(--muted); }
+    .q-hint {
+      font-family: var(--mono); font-size: 0.65rem; color: var(--dim);
+      margin-top: 0.3rem;
+    }
+
+    /* ── TOP 3 BLOCK ── */
+    .top3-grid { display: flex; flex-direction: column; gap: 1rem; }
+    .top3-card {
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 1.1rem 1.25rem;
+      display: flex; gap: 1rem; align-items: flex-start;
+    }
+    .top3-num {
+      font-family: var(--mono); font-size: 1.5rem; font-weight: 900;
+      color: var(--accent); line-height: 1; flex-shrink: 0; opacity: 0.5;
+    }
+    .top3-q { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .top3-why { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+
+    /* ── BRIEF TEMPLATE ── */
+    .brief-wrap { position: relative; }
+    .brief-code {
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 1.25rem 1.5rem;
+      font-family: var(--mono); font-size: 0.82rem; line-height: 2;
+      color: var(--muted); white-space: pre-wrap;
+    }
+    .brief-code .key { color: var(--accent); }
+    .brief-code .val { color: var(--text); }
+    .copy-brief-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      margin-top: 0.75rem;
+      background: var(--accent-dim); border: 1px solid rgba(0,229,160,0.3);
+      color: var(--accent); font-family: var(--mono); font-size: 0.76rem; font-weight: 700;
+      padding: 0.5rem 1.1rem; border-radius: 8px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .copy-brief-btn:hover { background: var(--accent); color: var(--bg); }
+    .copy-brief-btn.copied { background: var(--accent); color: var(--bg); }
+
+    /* ── PROGRESS BAR ── */
+    .progress-section {
+      padding: 1.2rem 2rem;
+      background: var(--bg-1); border-bottom: 1px solid var(--border);
+    }
+    .progress-header {
+      display: flex; justify-content: space-between; margin-bottom: 0.5rem;
+    }
+    .progress-header span { font-family: var(--mono); font-size: 0.74rem; color: var(--muted); }
+    .progress-header strong { font-family: var(--mono); color: var(--accent); }
+    .progress-track { height: 6px; background: var(--border); border-radius: 3px; }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #00b8ff);
+      border-radius: 3px; transition: width 0.4s ease;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 1.75rem; right: 1.75rem; z-index: 500;
+      background: var(--surface); border: 1px solid rgba(0,229,160,0.35);
+      color: var(--accent); font-family: var(--mono); font-size: 0.8rem;
+      padding: 0.7rem 1.2rem; border-radius: 10px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+      transform: translateY(8px); opacity: 0;
+      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+      pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    /* ── RESET BTN ── */
+    .reset-btn {
+      font-family: var(--mono); font-size: 0.7rem; color: var(--dim);
+      background: transparent; border: 1px solid var(--border);
+      padding: 4px 12px; border-radius: 6px; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .reset-btn:hover { color: var(--red); border-color: rgba(248,113,113,0.4); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 2rem;
+      text-align: center; font-family: var(--mono); font-size: 0.7rem; color: var(--dim);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      nav { padding: 0.8rem 1rem; }
+      .block-header { padding: 1rem 1.25rem; gap: 0.75rem; }
+      .block-body { padding: 1.25rem; }
+    }
+
+    @media print {
+      nav, .toast, .reset-btn, .copy-brief-btn { display: none !important; }
+      body { background: white; color: #111; }
+      .block { border: 1px solid #ddd; background: white; break-inside: avoid; }
+      .q-item { background: white; border-color: #eee; }
+      .q-text { color: #111 !important; }
+      .brief-code { background: #f8f8f8; color: #333; border-color: #ddd; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toast" id="toast">✓ Copiado</div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo"><span>[Ptt]</span>Stack · Brief de Cliente</div>
+    <div class="nav-right">
+      <button class="nav-btn" onclick="resetAll()">🔄 Reset</button>
+      <button class="nav-btn" onclick="window.print()">🖨️ Imprimir</button>
+      <a href="index.html" class="nav-btn">← Portfolio</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-label">// client_brief_guide.md</div>
+    <h1>Preguntas para la<br /><em>reunión con el cliente</em></h1>
+    <p>Marca las preguntas que ya tienes respondidas. Copia el brief final y pégalo en el chat con Claude para obtener arquitectura técnica, stack y presupuesto.</p>
+  </header>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-section">
+    <div class="container">
+      <div class="progress-header">
+        <span>Preguntas respondidas</span>
+        <strong id="prog-pct">0%</strong>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <div class="container">
+
+      <!-- ══ BLOQUE 1 — GENERAL ══ -->
+      <div class="block">
+        <div class="block-header">
+          <div class="block-icon icon-green">🧠</div>
+          <div class="block-title">
+            <h2>Preguntas generales</h2>
+            <p>Siempre, para cualquier tipo de proyecto</p>
+          </div>
+          <span class="block-badge badge-green">Siempre</span>
+        </div>
+        <div class="block-body">
+
+          <div class="q-group">
+            <div class="q-group-label">// El negocio y el problema</div>
+            <div class="q-list">
+              <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿A qué se dedica tu empresa / qué hace tu producto?</div></div></div>
+              <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Qué problema concreto quieres resolver con este proyecto?</div></div></div>
+              <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Tienes alguna web, app o referencia que te guste? ¿Por qué?</div></div></div>
+              <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Tienes competidores directos? ¿Cómo lo hacen ellos?</div></div></div>
+            </div>
+          </div>
+
+          <div class="q-group">
+            <div class="q-group-label">// Los usuarios</div>
+            <div class="q-list">
+              <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Quién va a usar esto? (edad, perfil, dispositivo habitual)</div></div></div>
+              <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Son clientes externos, empleados internos, o ambos?</div></div></div>
+              <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Cuántos usuarios esperas al inicio? ¿Y en 1 año?</div></div></div>
+            </div>
+          </div>
+
+          <div class="q-group">
+            <div class="q-group-label">// Objetivos y éxito</div>
+            <div class="q-list">
+              <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Qué tiene que hacer este proyecto SÍ o SÍ para que lo consideres un éxito?</div></div></div>
+              <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Hay una función principal que sea más importante que el resto?</div></div></div>
+              <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Tienes fecha límite? ¿Por qué esa fecha concretamente?</div></div></div>
+            </div>
+          </div>
+
+          <div class="q-group">
+            <div class="q-group-label">// Presupuesto</div>
+            <div class="q-list">
+              <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Tienes un presupuesto máximo en mente?</div></div></div>
+              <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Prefieres pago único o mensual?</div></div></div>
+              <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Hay presupuesto para mantenimiento después del lanzamiento?</div></div></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ══ BLOQUE 2 — WEB ══ -->
+      <div class="block">
+        <div class="block-header">
+          <div class="block-icon icon-blue">🌐</div>
+          <div class="block-title">
+            <h2>Desarrollo Web</h2>
+            <p>Landing, e-commerce, SaaS, portal, blog…</p>
+          </div>
+          <span class="block-badge badge-blue">Web</span>
+        </div>
+        <div class="block-body">
+          <div class="q-list">
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Qué tipo de web necesitas? <span style="color:var(--dim)">(landing, corporativa, e-commerce, portal, SaaS, blog…)</span></div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Los usuarios necesitan registrarse o tener cuenta propia?</div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Vendes productos o servicios? ¿Físicos o digitales?</div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Necesitas pasarela de pago? ¿Cuál? <span style="color:var(--dim)">(Stripe, Redsys, PayPal…)</span></div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Necesitas poder editar el contenido tú mismo sin tocar código? <span style="color:var(--dim)">(CMS)</span></div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Cuántas páginas o secciones necesitas aproximadamente?</div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Tienes ya el contenido? <span style="color:var(--dim)">(textos, fotos, logo, vídeos)</span> o se parte de cero</div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Tienes branding definido? <span style="color:var(--dim)">(colores, tipografía, logotipo)</span></div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Necesitas la web en varios idiomas?</div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Tienes dominio y hosting, o necesitas ayuda con eso también?</div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Quién va a mantener y actualizar la web cuando esté lista?</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ BLOQUE 3 — APPS ══ -->
+      <div class="block">
+        <div class="block-header">
+          <div class="block-icon icon-purple">📱</div>
+          <div class="block-title">
+            <h2>Apps Móviles</h2>
+            <p>iOS, Android, React Native, PWA…</p>
+          </div>
+          <span class="block-badge badge-purple">Mobile</span>
+        </div>
+        <div class="block-body">
+          <div class="q-list">
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Para qué sistema? ¿iOS, Android, o los dos?</div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Tiene que estar en el App Store / Google Play, o vale con instalarse desde el móvil? <span style="color:var(--dim)">(define PWA vs nativa)</span></div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿La app funciona sin internet o necesita conexión constante?</div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Los usuarios tienen perfil / cuenta, o la app es anónima?</div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Necesita notificaciones push?</div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Necesita acceder a la cámara, micrófono o GPS?</div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Hay pagos dentro de la app?</div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Necesita funciones en tiempo real? <span style="color:var(--dim)">(chat, tracking, actualizaciones en vivo)</span></div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Hay una versión web también, o solo app?</div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Tienes diseños o mockups, o partimos de cero?</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ BLOQUE 4 — BACKEND ══ -->
+      <div class="block">
+        <div class="block-header">
+          <div class="block-icon icon-amber">⚙️</div>
+          <div class="block-title">
+            <h2>Backend & Cloud</h2>
+            <p>APIs, bases de datos, servidores, integraciones…</p>
+          </div>
+          <span class="block-badge badge-amber">Backend</span>
+        </div>
+        <div class="block-body">
+          <div class="q-list">
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Ya tienes algo construido o es desde cero?</div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Qué tipo de datos manejas? <span style="color:var(--dim)">(usuarios, pedidos, documentos, datos médicos, financieros…)</span></div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Necesitas que varios sistemas se comuniquen entre sí? <span style="color:var(--dim)">(CRM, ERP, Mailchimp, pasarelas…)</span></div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Necesitas un panel de administración para gestionar datos?</div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Tienes proveedor cloud preferido? <span style="color:var(--dim)">(AWS, Google Cloud, Azure, Vercel…)</span></div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Cuántas peticiones simultáneas esperas? <span style="color:var(--dim)">(10 usuarios o 10.000)</span></div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Necesitas reportes o analíticas automáticas?</div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Hay tareas programadas? <span style="color:var(--dim)">(envíos de email, backups, informes diarios…)</span></div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Hay requisitos legales? <span style="color:var(--dim)">(RGPD, PCI-DSS para pagos, datos de salud…)</span></div></div></div>
+            <div class="q-item" onclick="toggleQ(this)"><div class="q-check">✓</div><div><div class="q-text">¿Qué nivel de disponibilidad necesitas? <span style="color:var(--dim)">(si cae 1 hora, ¿es crítico?)</span></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ BLOQUE 5 — TOP 3 ══ -->
+      <div class="block">
+        <div class="block-header">
+          <div class="block-icon icon-red">🎯</div>
+          <div class="block-title">
+            <h2>Las 3 preguntas que nunca fallan</h2>
+            <p>Úsalas siempre, en cualquier reunión</p>
+          </div>
+          <span class="block-badge badge-red">Must ask</span>
+        </div>
+        <div class="block-body">
+          <div class="top3-grid">
+            <div class="top3-card">
+              <div class="top3-num">01</div>
+              <div>
+                <div class="top3-q">"Muéstrame 3 apps o webs que te gusten y dime por qué."</div>
+                <div class="top3-why">Te ahorras horas de adivinanzas sobre diseño, UX y tono. Vale más que cualquier briefing escrito.</div>
+              </div>
+            </div>
+            <div class="top3-card">
+              <div class="top3-num">02</div>
+              <div>
+                <div class="top3-q">"¿Qué es lo UNO que este producto tiene que hacer perfecto?"</div>
+                <div class="top3-why">Identifica el núcleo real del proyecto. Todo lo demás es secundario. Evita que el alcance crezca sin control.</div>
+              </div>
+            </div>
+            <div class="top3-card">
+              <div class="top3-num">03</div>
+              <div>
+                <div class="top3-q">"¿Quién toma la decisión final?"</div>
+                <div class="top3-why">Evita hacer 3 rondas de cambios por alguien que no tiene la última palabra. Ahorra tiempo y conflictos.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ BLOQUE 6 — BRIEF PARA CLAUDE ══ -->
+      <div class="block">
+        <div class="block-header">
+          <div class="block-icon icon-green">🤖</div>
+          <div class="block-title">
+            <h2>Brief para Claude</h2>
+            <p>Copia esto, rellénalo con las respuestas del cliente y pégalo en el chat</p>
+          </div>
+          <span class="block-badge badge-green">Plantilla</span>
+        </div>
+        <div class="block-body">
+          <div class="brief-wrap">
+            <div class="brief-code" id="brief-text"><span class="key">Tipo de proyecto:</span>  <span class="val">[web / app / backend / los tres]</span>
+<span class="key">Qué hace:</span>          <span class="val">[descripción en 2-3 líneas]</span>
+<span class="key">Usuarios:</span>          <span class="val">[quién los usa y cuántos se esperan]</span>
+<span class="key">Funciones clave:</span>   <span class="val">[lista de lo que DEBE hacer]</span>
+<span class="key">Diseño:</span>            <span class="val">[tienen branding / referencias / desde cero]</span>
+<span class="key">Integraciones:</span>    <span class="val">[pagos, CRM, APIs externas, etc.]</span>
+<span class="key">Plataforma:</span>        <span class="val">[web, iOS, Android, PWA...]</span>
+<span class="key">Tiempo real:</span>       <span class="val">[sí / no — chat, tracking, notificaciones...]</span>
+<span class="key">Escala esperada:</span>   <span class="val">[usuarios concurrentes aproximados]</span>
+<span class="key">Cloud / hosting:</span>   <span class="val">[AWS / Vercel / el que tengan / sin preferencia]</span>
+<span class="key">Requisitos legales:</span><span class="val">[RGPD, pagos, datos sensibles...]</span>
+<span class="key">Plazo:</span>             <span class="val">[fecha o margen]</span>
+<span class="key">Presupuesto:</span>       <span class="val">[rango orientativo]</span>
+<span class="key">Extras:</span>            <span class="val">[cualquier detalle importante]</span></div>
+            <button class="copy-brief-btn" onclick="copyBrief(this)">📋 Copiar plantilla</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <span>[Ptt]Stack</span> · Patricio García Menchón · <a href="https://pttstack.dev">pttstack.dev</a>
+  </footer>
+
+  <script>
+    const STORAGE_KEY = 'pttstack-brief-checks';
+
+    /* ── TOGGLE QUESTION ── */
+    function toggleQ(el) {
+      el.classList.toggle('checked');
+      saveChecks();
+      updateProgress();
+    }
+
+    /* ── PROGRESS ── */
+    function updateProgress() {
+      const total = document.querySelectorAll('.q-item').length;
+      const done  = document.querySelectorAll('.q-item.checked').length;
+      const pct   = Math.round(done / total * 100);
+      document.getElementById('prog-fill').style.width = pct + '%';
+      document.getElementById('prog-pct').textContent  = pct + '%';
+    }
+
+    /* ── COPY BRIEF ── */
+    function copyBrief(btn) {
+      const text = `Tipo de proyecto:   [web / app / backend / los tres]
+Qué hace:           [descripción en 2-3 líneas]
+Usuarios:           [quién los usa y cuántos se esperan]
+Funciones clave:    [lista de lo que DEBE hacer]
+Diseño:             [tienen branding / referencias / desde cero]
+Integraciones:      [pagos, CRM, APIs externas, etc.]
+Plataforma:         [web, iOS, Android, PWA...]
+Tiempo real:        [sí / no — chat, tracking, notificaciones...]
+Escala esperada:    [usuarios concurrentes aproximados]
+Cloud / hosting:    [AWS / Vercel / el que tengan / sin preferencia]
+Requisitos legales: [RGPD, pagos, datos sensibles...]
+Plazo:              [fecha o margen]
+Presupuesto:        [rango orientativo]
+Extras:             [cualquier detalle importante]`;
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.innerHTML;
+        btn.innerHTML = '✓ Copiado';
+        btn.classList.add('copied');
+        showToast('📋 Plantilla copiada al portapapeles');
+        setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2200);
+      });
+    }
+
+    /* ── TOAST ── */
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg || '✓ Hecho';
+      t.classList.add('show');
+      clearTimeout(t._t);
+      t._t = setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
+    /* ── SAVE / LOAD ── */
+    function saveChecks() {
+      const items = document.querySelectorAll('.q-item');
+      const state = Array.from(items).map(el => el.classList.contains('checked'));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function loadChecks() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const state = JSON.parse(raw);
+      const items = document.querySelectorAll('.q-item');
+      items.forEach((el, i) => {
+        if (state[i]) el.classList.add('checked');
+      });
+      updateProgress();
+    }
+
+    /* ── RESET ── */
+    function resetAll() {
+      if (!confirm('¿Resetear todas las preguntas marcadas?')) return;
+      document.querySelectorAll('.q-item.checked').forEach(el => el.classList.remove('checked'));
+      localStorage.removeItem(STORAGE_KEY);
+      updateProgress();
+      showToast('🔄 Reseteado');
+    }
+
+    /* ── INIT ── */
+    loadChecks();
+  </script>
+
+</body>
+</html>
