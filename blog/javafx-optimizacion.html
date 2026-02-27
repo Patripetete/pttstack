@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cómo optimicé una app JavaFX al límite — [Ptt]Stack</title>
+  <meta name="description" content="Técnicas reales de profiling, lazy loading y gestión de memoria en aplicaciones de escritorio Java. Lecciones aprendidas desarrollando WalletApp." />
+  <meta name="author" content="Patricio García Menchón" />
+  <meta property="og:title" content="Cómo optimicé una app JavaFX al límite" />
+  <meta property="og:description" content="Técnicas reales de profiling, lazy loading y gestión de memoria en apps JavaFX." />
+  <meta property="og:url" content="https://pttstack.dev/blog/javafx-optimizacion.html" />
+  <meta property="og:type" content="article" />
+  <meta property="article:published_time" content="2026-02-27" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <style>
+    :root {
+      --bg: #050507; --bg-1: #0e0e12; --surface: #1a1a24;
+      --border: #2a2a38; --accent: #00e5a0;
+      --text: #f0f0f8; --text-muted: #7a7a9a;
+      --mono: 'JetBrains Mono', monospace; --sans: 'Inter', sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.8; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    nav {
+      background: var(--bg-1); border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .logo { font-family: var(--mono); font-weight: 700; font-size: 1rem; color: var(--text); }
+    .logo span { color: var(--accent); }
+    .nav-back { font-family: var(--mono); font-size: 0.82rem; color: var(--text-muted); }
+    .nav-back:hover { color: var(--accent); }
+
+    main { max-width: 720px; margin: 0 auto; padding: 4rem 2rem 6rem; }
+
+    .post-meta { font-family: var(--mono); font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .post-label { color: var(--accent); }
+    h1 { font-size: 2rem; font-weight: 700; line-height: 1.25; margin-bottom: 1rem; }
+    .post-sub { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 2rem; }
+
+    h2 {
+      font-size: 1.1rem; font-weight: 600; color: var(--accent);
+      font-family: var(--mono); margin: 2.5rem 0 0.75rem;
+      padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+    }
+    h3 { font-size: 1rem; font-weight: 600; margin: 1.5rem 0 0.5rem; color: var(--text); }
+    p { color: var(--text-muted); margin-bottom: 1rem; }
+    ul, ol { color: var(--text-muted); padding-left: 1.5rem; margin-bottom: 1rem; }
+    li { margin-bottom: 0.4rem; }
+    strong { color: var(--text); font-weight: 600; }
+
+    pre {
+      background: var(--surface); border: 1px solid var(--border);
+      border-left: 3px solid var(--accent); border-radius: 8px;
+      padding: 1.25rem 1.5rem; margin: 1.25rem 0; overflow-x: auto;
+      font-family: var(--mono); font-size: 0.82rem; line-height: 1.6;
+      color: #c9d1d9;
+    }
+    code { font-family: var(--mono); font-size: 0.85em; background: var(--surface); padding: 0.15em 0.4em; border-radius: 4px; color: var(--accent); }
+
+    .info-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-left: 3px solid var(--accent); border-radius: 8px;
+      padding: 1.25rem 1.5rem; margin: 1.5rem 0;
+    }
+    .info-box p { margin: 0; }
+
+    .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+    .metric-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+      padding: 1rem; text-align: center;
+    }
+    .metric-val { font-family: var(--mono); font-size: 1.6rem; font-weight: 700; color: var(--accent); }
+    .metric-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+    .post-footer {
+      margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .author-avatar {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--surface); border: 2px solid var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-weight: 700; color: var(--accent); font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .author-name { font-weight: 600; font-size: 0.95rem; }
+    .author-role { font-size: 0.82rem; color: var(--text-muted); font-family: var(--mono); }
+
+    footer {
+      text-align: center; padding: 2rem; border-top: 1px solid var(--border);
+      font-size: 0.82rem; color: var(--text-muted); font-family: var(--mono);
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 1.6rem; }
+      .metric-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/" class="logo"><span>[Ptt]</span>Stack</a>
+    <a href="/" class="nav-back">← Volver al inicio</a>
+  </nav>
+
+  <main>
+    <div class="post-meta">
+      <span class="post-label">// blog.post</span> &nbsp;·&nbsp; 27 febrero 2026 &nbsp;·&nbsp; 8 min lectura
+    </div>
+    <h1>Cómo optimicé una app JavaFX al límite</h1>
+    <p class="post-sub">Técnicas reales de profiling, lazy loading y gestión de memoria aplicadas en WalletApp: una aplicación de escritorio para gestión de finanzas personales construida con JavaFX y SQLite.</p>
+
+    <div class="info-box">
+      <p><strong>TL;DR:</strong> Pasé de 4 segundos de arranque y 180 MB de RAM en idle a 1.2 segundos y 95 MB aplicando lazy loading de vistas FXML, pool de conexiones SQLite, caché de consultas frecuentes y virtualización de listas.</p>
+    </div>
+
+    <h2>// 01. El problema</h2>
+    <p>WalletApp empezó como un proyecto de aprendizaje: una aplicación JavaFX para llevar el control de mis finanzas personales. Varias cuentas, categorías, gráficos de evolución mensual. Funcionaba, pero <strong>la experiencia era horrible</strong>.</p>
+    <p>En la versión inicial, al arrancar la aplicación cargaba todas las vistas FXML de golpe, abría la conexión a SQLite, ejecutaba 12 queries de inicialización y calculaba los gráficos. Todo en el hilo principal. El resultado:</p>
+
+    <div class="metric-grid">
+      <div class="metric-card">
+        <div class="metric-val">4.1s</div>
+        <div class="metric-label">Tiempo de arranque</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val">180 MB</div>
+        <div class="metric-label">RAM en idle</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val">~340ms</div>
+        <div class="metric-label">Cambio de pestaña</div>
+      </div>
+    </div>
+
+    <h2>// 02. Profiling primero, optimizar después</h2>
+    <p>El error clásico es optimizar a ciegas. Yo empecé conectando <strong>VisualVM</strong> (incluido con el JDK) y grabando un perfil de arranque. La sorpresa: el 68% del tiempo de arranque lo consumían dos cosas:</p>
+    <ul>
+      <li>Carga de todos los FXML en el constructor de <code>MainController</code></li>
+      <li>Una query JOIN sin índice en la tabla de transacciones</li>
+    </ul>
+    <p>Sin profiling habría empezado optimizando lo que me parecía lento intuitivamente (los gráficos con JavaFX Charts). Habría perdido tiempo en el 32% del problema.</p>
+
+    <h2>// 03. Lazy loading de vistas FXML</h2>
+    <p>La primera versión cargaba los 5 paneles (Dashboard, Cuentas, Transacciones, Categorías, Estadísticas) al arrancar, aunque el usuario solo vea el Dashboard. La solución es cargarlos bajo demanda:</p>
+
+    <pre>// ANTES: todo cargado en el constructor
+public class MainController {
+    @FXML private Parent dashboardPane;
+    @FXML private Parent accountsPane;
+    @FXML private Parent transactionsPane;
+    // 5 paneles cargados siempre
+
+    public void initialize() {
+        loadAllPanes(); // 4 segundos aquí
+    }
+}</pre>
+
+    <pre>// DESPUÉS: lazy loading por demanda
+public class MainController {
+    private final Map&lt;String, Parent&gt; paneCache = new HashMap&lt;&gt;();
+
+    private Parent getPane(String name) throws IOException {
+        return paneCache.computeIfAbsent(name, k -> {
+            try {
+                return FXMLLoader.load(
+                    getClass().getResource("/fxml/" + k + ".fxml")
+                );
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    public void showDashboard() {
+        contentArea.setCenter(getPane("Dashboard"));
+    }
+}</pre>
+
+    <p>Resultado: el arranque baja de 4.1s a 1.8s. Solo se carga el Dashboard en el arranque. El resto se carga la primera vez que el usuario navega a esa sección y queda cacheado en <code>paneCache</code>.</p>
+
+    <h2>// 04. Índices en SQLite y pool de conexiones</h2>
+    <p>La query lenta era un JOIN entre <code>transacciones</code> y <code>categorias</code> filtrado por rango de fechas. Sin índice, SQLite hacía un full scan de toda la tabla en cada cambio de mes.</p>
+
+    <pre>-- Índice compuesto por fecha y cuenta
+CREATE INDEX IF NOT EXISTS idx_trans_fecha_cuenta
+ON transacciones(fecha, cuenta_id);
+
+-- Índice para filtros por categoría
+CREATE INDEX IF NOT EXISTS idx_trans_categoria
+ON transacciones(categoria_id);</pre>
+
+    <p>La query de dashboard pasó de ~280ms a ~12ms. Para el pool de conexiones, en lugar de abrir y cerrar SQLite en cada operación, mantengo una conexión persistente con WAL mode activado:</p>
+
+    <pre>public class DatabaseManager {
+    private static Connection connection;
+
+    public static Connection getConnection() throws SQLException {
+        if (connection == null || connection.isClosed()) {
+            connection = DriverManager.getConnection("jdbc:sqlite:wallet.db");
+            // WAL mode: lecturas y escrituras concurrentes
+            connection.createStatement().execute("PRAGMA journal_mode=WAL");
+            connection.createStatement().execute("PRAGMA cache_size=10000");
+        }
+        return connection;
+    }
+}</pre>
+
+    <h2>// 05. Caché de consultas frecuentes</h2>
+    <p>El balance total y el resumen del mes actual se recalculaban en cada render. Como son datos que no cambian hasta que el usuario añade una transacción, los cacheo con invalidación explícita:</p>
+
+    <pre>public class CacheService {
+    private static final Map&lt;String, Object&gt; cache = new ConcurrentHashMap&lt;&gt;();
+
+    @SuppressWarnings("unchecked")
+    public static &lt;T&gt; T get(String key, Supplier&lt;T&gt; loader) {
+        return (T) cache.computeIfAbsent(key, k -> loader.get());
+    }
+
+    // Llamar al añadir/editar/borrar transacción
+    public static void invalidate(String... keys) {
+        Arrays.stream(keys).forEach(cache::remove);
+    }
+}</pre>
+
+    <h2>// 06. Virtualización de listas</h2>
+    <p>Con 500+ transacciones, el <code>ListView</code> de JavaFX renderizaba todos los items aunque solo se vieran 15 en pantalla. JavaFX ya tiene virtualización built-in en <code>ListView</code> y <code>TableView</code>, pero yo estaba usando un <code>VBox</code> con un bucle. Error clásico.</p>
+    <p>Migrar a <code>TableView</code> con <code>ObservableList</code> y paginación redujo el cambio de pestaña de ~340ms a ~18ms con 1000 registros.</p>
+
+    <h2>// 07. Resultados finales</h2>
+
+    <div class="metric-grid">
+      <div class="metric-card">
+        <div class="metric-val">1.2s</div>
+        <div class="metric-label">Arranque (−71%)</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val">95 MB</div>
+        <div class="metric-label">RAM idle (−47%)</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val">18ms</div>
+        <div class="metric-label">Cambio de pestaña (−95%)</div>
+      </div>
+    </div>
+
+    <h2>// 08. Lo que me llevé</h2>
+    <ul>
+      <li><strong>Mide antes de optimizar.</strong> VisualVM reveló que estaba mirando en el lugar equivocado.</li>
+      <li><strong>Los índices en SQLite son gratis.</strong> Una línea de SQL puede eliminar segundos de latencia.</li>
+      <li><strong>JavaFX tiene buenas primitivas.</strong> <code>TableView</code>, <code>ListView</code> y <code>TreeView</code> tienen virtualización built-in. Úsalas.</li>
+      <li><strong>El lazy loading no es solo para web.</strong> Cargar bajo demanda es un patrón universal.</li>
+    </ul>
+
+    <p>El código de WalletApp está en <a href="https://github.com/Patripetete/WalletApp" target="_blank" rel="noopener">GitHub</a> si quieres ver la implementación completa.</p>
+
+    <div class="post-footer">
+      <div class="author-avatar">PG</div>
+      <div>
+        <div class="author-name">Patricio García Menchón</div>
+        <div class="author-role">Fullstack Developer · pttstack.dev</div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span id="year"></span> © [Ptt]Stack · <a href="/">pttstack.dev</a>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

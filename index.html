@@ -246,6 +246,10 @@
       text-align: center;
       padding: 8rem 2rem 4rem;
     }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
     .hero-badge {
       display: inline-flex;
       align-items: center;
@@ -259,6 +263,7 @@
       border-radius: 999px;
       margin-bottom: 2rem;
       letter-spacing: 0.5px;
+      animation: fadeSlideUp 0.6s ease both;
     }
     .hero-badge::before {
       content: '';
@@ -280,6 +285,7 @@
       line-height: 1.05;
       margin-bottom: 1.5rem;
       max-width: 820px;
+      animation: fadeSlideUp 0.6s ease 0.15s both;
     }
     .hero h1 .highlight {
       background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
@@ -293,6 +299,7 @@
       max-width: 600px;
       margin-bottom: 3.5rem;
       font-weight: 400;
+      animation: fadeSlideUp 0.6s ease 0.3s both;
     }
 
     /* ─── TERMINAL ───────────────────────────────── */
@@ -1290,7 +1297,7 @@
         Del primer commit al despliegue en producción.
       </p>
 
-      <div class="terminal" aria-label="Terminal de presentación">
+      <div class="terminal" aria-label="Terminal de presentación" style="animation: fadeSlideUp 0.6s ease 0.45s both;">
         <div class="term-titlebar">
           <div class="term-dots">
             <div class="term-dot dot-red"></div>
@@ -1539,12 +1546,12 @@
           <p class="section-desc" data-i18n="blog.desc">Próximamente: notas sobre arquitectura, rendimiento y desarrollo moderno.</p>
         </div>
         <div class="blog-grid">
-          <div class="blog-card reveal">
+          <a href="/blog/javafx-optimizacion.html" class="blog-card reveal" style="text-decoration:none;display:block;">
             <div class="blog-tag">// Performance</div>
             <h4 data-i18n="blog.art1.title">Cómo optimicé una app JavaFX al límite</h4>
             <p data-i18n="blog.art1.desc">Técnicas de profiling, lazy loading y gestión de memoria en aplicaciones de escritorio Java.</p>
-            <div class="blog-soon" data-i18n="blog.soon">Próximamente →</div>
-          </div>
+            <div class="blog-soon" data-i18n="blog.art1.link" style="color:var(--accent)">Leer artículo →</div>
+          </a>
           <div class="blog-card reveal">
             <div class="blog-tag">// Backend</div>
             <h4 data-i18n="blog.art2.title">APIs REST que escalan: lecciones aprendidas</h4>
@@ -2288,8 +2295,9 @@
         'test.label': '// 04.testimonios', 'test.title': 'Lo que dicen de mí',
         'test.desc': 'Clientes y colaboradores que han confiado en mi trabajo.',
         'blog.label': '// 05.blog', 'blog.title': 'Artículos técnicos',
-        'blog.desc': 'Próximamente: notas sobre arquitectura, rendimiento y desarrollo moderno.',
+        'blog.desc': 'Notas sobre arquitectura, rendimiento y desarrollo moderno.',
         'blog.art1.title': 'Cómo optimicé una app JavaFX al límite',
+        'blog.art1.link': 'Leer artículo →',
         'blog.art1.desc': 'Técnicas de profiling, lazy loading y gestión de memoria en aplicaciones de escritorio Java.',
         'blog.art2.title': 'APIs REST que escalan: lecciones aprendidas',
         'blog.art2.desc': 'De un endpoint que tardaba 2s a responder en menos de 50ms. Sin magia, solo buenas prácticas.',
@@ -2335,8 +2343,9 @@
         'test.label': '// 04.testimonials', 'test.title': 'What they say about me',
         'test.desc': 'Clients and collaborators who have trusted my work.',
         'blog.label': '// 05.blog', 'blog.title': 'Technical articles',
-        'blog.desc': 'Coming soon: notes on architecture, performance and modern development.',
+        'blog.desc': 'Notes on architecture, performance and modern development.',
         'blog.art1.title': 'How I optimized a JavaFX app to its limits',
+        'blog.art1.link': 'Read article →',
         'blog.art1.desc': 'Profiling techniques, lazy loading and memory management in Java desktop applications.',
         'blog.art2.title': 'REST APIs that scale: lessons learned',
         'blog.art2.desc': 'From an endpoint that took 2s to responding in under 50ms. No magic, just good practices.',
