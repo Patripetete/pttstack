@@ -1331,41 +1331,41 @@
           <div class="service-card reveal" onclick="openModal('service','web')" style="cursor:pointer" role="button" tabindex="0">
             <span class="service-number">01</span>
             <div class="service-icon green">🌐</div>
-            <h3>Desarrollo Web</h3>
-            <p>Aplicaciones web modernas con rendimiento obsesivo. SPA, SSR, SSG. Desde landing pages de alta conversión hasta plataformas SaaS complejas.</p>
+            <h3 data-i18n="svc.web.title">Desarrollo Web</h3>
+            <p data-i18n="svc.web.desc">Aplicaciones web modernas con rendimiento obsesivo. SPA, SSR, SSG. Desde landing pages de alta conversión hasta plataformas SaaS complejas.</p>
             <div class="service-tags">
               <span class="tag">React</span>
               <span class="tag">Next.js</span>
               <span class="tag">TypeScript</span>
               <span class="tag">Node.js</span>
             </div>
-            <div class="service-cta">Ver ejemplos →</div>
+            <div class="service-cta" data-i18n="svc.cta">Ver ejemplos →</div>
           </div>
           <div class="service-card reveal" onclick="openModal('service','mobile')" style="cursor:pointer" role="button" tabindex="0">
             <span class="service-number">02</span>
             <div class="service-icon purple">📱</div>
-            <h3>Apps Móviles</h3>
-            <p>Aplicaciones multiplataforma fluidas e intuitivas que tu negocio merece. Código compartido, experiencia nativa.</p>
+            <h3 data-i18n="svc.mobile.title">Apps Móviles</h3>
+            <p data-i18n="svc.mobile.desc">Aplicaciones multiplataforma fluidas e intuitivas que tu negocio merece. Código compartido, experiencia nativa.</p>
             <div class="service-tags">
               <span class="tag">React Native</span>
               <span class="tag">Expo</span>
               <span class="tag">iOS</span>
               <span class="tag">Android</span>
             </div>
-            <div class="service-cta">Ver ejemplos →</div>
+            <div class="service-cta" data-i18n="svc.cta">Ver ejemplos →</div>
           </div>
           <div class="service-card reveal" onclick="openModal('service','backend')" style="cursor:pointer" role="button" tabindex="0">
             <span class="service-number">03</span>
             <div class="service-icon blue">⚙️</div>
-            <h3>Backend & Cloud</h3>
-            <p>Arquitecturas de servidor robustas, APIs RESTful y GraphQL, bases de datos optimizadas e infraestructura cloud escalable.</p>
+            <h3 data-i18n="svc.backend.title">Backend & Cloud</h3>
+            <p data-i18n="svc.backend.desc">Arquitecturas de servidor robustas, APIs RESTful y GraphQL, bases de datos optimizadas e infraestructura cloud escalable.</p>
             <div class="service-tags">
               <span class="tag">APIs REST</span>
               <span class="tag">PostgreSQL</span>
               <span class="tag">AWS</span>
               <span class="tag">Docker</span>
             </div>
-            <div class="service-cta">Ver ejemplos →</div>
+            <div class="service-cta" data-i18n="svc.cta">Ver ejemplos →</div>
           </div>
         </div>
       </div>
@@ -1657,7 +1657,7 @@
               <div class="form-row">
                 <div class="form-group" id="group-name">
                   <label for="name" data-i18n="form.name">// nombre</label>
-                  <input type="text" id="name" name="name" placeholder="Tu nombre" required autocomplete="name" />
+                  <input type="text" id="name" name="name" placeholder="Tu nombre" data-i18n="form.name.placeholder" required autocomplete="name" />
                   <span class="field-error" id="err-name" data-i18n="form.err.name">Campo obligatorio</span>
                 </div>
                 <div class="form-group" id="group-email">
@@ -1678,7 +1678,7 @@
               </div>
               <div class="form-group" id="group-message">
                 <label for="message" data-i18n="form.message">// mensaje</label>
-                <textarea id="message" name="message" placeholder="Cuéntame sobre tu proyecto, idea o necesidad..." required></textarea>
+                <textarea id="message" name="message" placeholder="Cuéntame sobre tu proyecto, idea o necesidad..." data-i18n="form.message.placeholder" required></textarea>
                 <span class="field-error" id="err-message" data-i18n="form.err.message">Campo obligatorio</span>
               </div>
               <button type="submit" class="btn btn-primary form-submit">
@@ -2302,7 +2302,12 @@
         'about.stat3': 'Compromiso con el cliente', 'about.stat4': 'Pasión por el código',
         'contact.label': '// 07.contact', 'contact.title': '¿Listo para construir algo increíble?',
         'contact.sub': 'Cuéntame sobre tu proyecto. Respondo en menos de 24 horas.',
+        'svc.web.title': 'Desarrollo Web', 'svc.web.desc': 'Aplicaciones web modernas con rendimiento obsesivo. SPA, SSR, SSG. Desde landing pages de alta conversión hasta plataformas SaaS complejas.',
+        'svc.mobile.title': 'Apps Móviles', 'svc.mobile.desc': 'Aplicaciones multiplataforma fluidas e intuitivas que tu negocio merece. Código compartido, experiencia nativa.',
+        'svc.backend.title': 'Backend & Cloud', 'svc.backend.desc': 'Arquitecturas de servidor robustas, APIs RESTful y GraphQL, bases de datos optimizadas e infraestructura cloud escalable.',
+        'svc.cta': 'Ver ejemplos →',
         'form.name': '// nombre', 'form.email': '// email',
+        'form.name.placeholder': 'Tu nombre', 'form.message.placeholder': 'Cuéntame sobre tu proyecto, idea o necesidad...',
         'form.service': '// servicio', 'form.message': '// mensaje', 'form.submit': 'Enviar mensaje',
         'form.service.placeholder': 'Selecciona un servicio...', 'form.service.web': 'Desarrollo Web',
         'form.service.app': 'App Móvil', 'form.service.backend': 'Backend / API', 'form.service.other': 'Otro proyecto',
@@ -2344,7 +2349,12 @@
         'about.stat3': 'Client commitment', 'about.stat4': 'Passion for code',
         'contact.label': '// 07.contact', 'contact.title': 'Ready to build something amazing?',
         'contact.sub': 'Tell me about your project. I respond in under 24 hours.',
+        'svc.web.title': 'Web Development', 'svc.web.desc': 'Modern web applications with obsessive performance. SPA, SSR, SSG. From high-conversion landing pages to complex SaaS platforms.',
+        'svc.mobile.title': 'Mobile Apps', 'svc.mobile.desc': 'Fluid and intuitive cross-platform applications your business deserves. Shared code, native experience.',
+        'svc.backend.title': 'Backend & Cloud', 'svc.backend.desc': 'Robust server architectures, RESTful and GraphQL APIs, optimized databases and scalable cloud infrastructure.',
+        'svc.cta': 'See examples →',
         'form.name': '// name', 'form.email': '// email',
+        'form.name.placeholder': 'Your name', 'form.message.placeholder': 'Tell me about your project, idea or need...',
         'form.service': '// service', 'form.message': '// message', 'form.submit': 'Send message',
         'form.service.placeholder': 'Select a service...', 'form.service.web': 'Web Development',
         'form.service.app': 'Mobile App', 'form.service.backend': 'Backend / API', 'form.service.other': 'Other project',
